@@ -5,6 +5,7 @@ from tkinter import PhotoImage
 
 import base64
 import os
+import sys
 from cryptography.fernet import Fernet, InvalidToken
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
@@ -16,13 +17,13 @@ class App(tk.CTk):
         tk.set_appearance_mode("dark")
         tk.set_default_color_theme("dark-blue")
 
-        self.title("Chiffr3ment")
+        self.title("Crypt0file")
         self.iconphoto(True, PhotoImage(file="img/icon.png"))
         self.geometry("260x300")
         self.resizable(False, False)
         self.focus_force()
 
-        self.lbl_title = tk.CTkLabel(self, text="Chiffr3ment",
+        self.lbl_title = tk.CTkLabel(self, text="Crypt0file",
                                      font=("arial", 18, "bold"))
         self.lbl_title.pack(side="top", anchor="center", pady=(10, 0))
         self.get_file = GetFile(self)
@@ -239,14 +240,24 @@ class Form(tk.CTkFrame):
                       "Les mots de passe saisis ne sont pas identiques")
         else:
             showinfo("succès", self.master.encrypt(password1, file))
+            dirname = os.path.split(file)
+            if sys.platform == "win32":
+                os.system(f"start {dirname[0]}")
+            else:
+                os.system(f"open {dirname[0]}")
             self.cancel()
 
     def decrypt(self, password, file):
         try:
             showinfo("succès", self.master.decrypt(password, file))
+            dirname = os.path.split(file)
+            if sys.platform == "win32":
+                os.system(f"start {dirname[0]}")
+            else:
+                os.system(f"open {dirname[0]}")
+            self.cancel()
         except InvalidToken:
             return showinfo("Erreur", "Le mot de passe saisis est incorrect")
-        self.cancel()
 
 
 def main():
